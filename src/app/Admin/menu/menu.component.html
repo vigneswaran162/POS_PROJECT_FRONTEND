@@ -1,0 +1,239 @@
+<div class="container-fluid" style="height: 86vh;">
+  <div class="row ">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-12 sticky-top top-box p-2 d-flex align-items-center justify-content-between mb-2">
+          <h6 class="mt-2 px-2">Menu Item <span>({{ItemDetails.length}})</span></h6>
+
+
+
+          <div class="group">
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="search-icon">
+              <g>
+                <path
+                  d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z">
+                </path>
+              </g>
+            </svg>
+
+            <input id="query" class="input" type="search" placeholder="Search..." name="searchbar" />
+          </div>
+
+
+          <div>
+            <img width="40" height="40" (click)="isPopupOpen = true" style="cursor: pointer;"
+              src="https://img.icons8.com/wired/64/restaurant-table.png" alt="restaurant-table" />
+          </div>
+          <div class="radio-input">
+            <label>
+              <input value="Dine In" name="value-radio" id="value-1" type="radio" [(ngModel)]="model.OrderType"
+                (change)="OnChangeOrderType()" />
+              <span>Dine In</span>
+            </label>
+            <label>
+              <input value="Take Away" name="value-radio" id="value-2" type="radio" [(ngModel)]="model.OrderType"  (change)="OnChangeOrderType()"/>
+              <span>Take Away</span>
+            </label>
+            <label>
+              <input value="Delivery" name="value-radio" id="value-3" type="radio" [(ngModel)]="model.OrderType" (change)="OnChangeOrderType()"/>
+              <span>Delivery</span>
+            </label>
+            <span class="selection"></span>
+          </div>
+
+        </div>
+        <div class="col-md-12 d-flex">
+
+          <div class="button-group">
+            <input type="radio" id="Allmenu" name="frameworks" checked value="AllMenu" [(ngModel)]="ItemType"
+              (change)="onItemTypeChange($event)" />
+            <label for="Allmenu">All menu</label>
+          </div>
+
+          <div class="button-group">
+            <input type="radio" id="Maindish" name="Maindish" value="MainDish" [(ngModel)]="ItemType"
+              (change)="onItemTypeChange($event)" />
+            <label for="Maindish">Main dish</label>
+          </div>
+
+          <div class="button-group">
+            <input type="radio" id="Sidedish" name="Sidedish" value="SideDish" [(ngModel)]="ItemType"
+              (change)="onItemTypeChange($event)" />
+            <label for="Sidedish">Side dish</label>
+          </div>
+          <div class="button-group">
+            <input type="radio" id="Snacks" name="Snacks" value="Snacks" [(ngModel)]="ItemType"
+              (change)="onItemTypeChange($event)" />
+            <label for="Snacks">Snacks</label>
+          </div>
+
+
+        </div>
+        <div class="col-md-12 grid-container mt-2">
+
+          <div class="grid-box p-3" *ngFor="let item of ItemDetails">
+            <div class="img-box w-100 d-flex align-items-center justify-content-center">
+              <img [src]="item.ItemImage" class="img-fluid item-img" alt="item image">
+            </div>
+            <div class="text-content">
+              <div class="text-cont mb-3 px-3"><span class="itemrate">{{item.ItemName}}</span> <span class="itemrate"><i
+                    class="bi bi-currency-rupee"></i> {{item.Rate}}</span></div>
+              <div><button class="button-blue-sm w-100" (click)="AddItem(item)">Add Item</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 ps-5">
+      <div class="row  top-box p-3">
+        <div class="col-md-12">
+          <div class="box-1 d-flex align-items-center justify-content-between">
+            <h6 class="title">Order <span>Summary</span></h6>
+            <span class="billno">{{model.TableNo}}</span>
+          </div>
+          <div class="menu-box">
+            <h6 class="subtitle1 mt-2 mb-4">Order Items <span>({{OrderDet.length}})</span></h6>
+
+            <div class="item-box w-100 mt-3 d-flex  justify-content-between"
+              *ngFor="let item of OrderDet;let i = index;">
+              <div class="img" style="width: 30%;">
+                <img [src]="item.ItemImage" class="img-fluid sm-img" alt="">
+              </div>
+              <div class="text  d-flex  justify-content-between" style="width: 70%;">
+                <div>
+                  <h6 class="item-title mb-2">{{item.ItemName}}</h6>
+                  <span class="item-subtitle"><i class="bi bi-dash-circle" (click)="AddMinus(item)"></i> {{item.Rate}} *
+                    {{item.Qty}} <i class="bi bi-plus-circle ms-2" (click)="AddPlus(item)"></i> </span>
+                </div>
+                <div class="pe-5 mt-2">
+                  <i class="bi bi-trash" (click)="DeleteRow(i)"></i>
+                </div>
+              </div>
+            </div>
+
+
+
+
+
+
+          </div>
+
+          <div class="Payment-box">
+            <!-- <h6 class="subtitle2 my-3">Payment <span>Summary</span></h6> -->
+
+            <div class="payment-content">
+              <!-- <h6 class="payment-title">Price: <span>{{TotalAmount}}</span></h6>
+                            <h6  class="payment-title">Taxes: <span>0.00</span></h6>
+                            <h6  class="payment-title">Disco: <span>0.00</span></h6>
+                            <hr> -->
+              <h6 class="mb-3 payment-title">Total: <span class="TotalAmount">{{TotalAmount}}</span></h6>
+
+
+            </div>
+            <h6 class="title-1 mb-2">Payment Methods:</h6>
+            <div class="box-1 d-flex align-items-center justify-content-between mb-3">
+
+
+              <div class="button-group">
+                <input type="radio" id="UPI" name="UPI" checked value="UPI" [(ngModel)]="model.PaymentType" />
+                <label for="UPI" class="label-1">UPI</label>
+              </div>
+
+              <div class="button-group">
+                <input type="radio" id="CASH" name="CASH" value="CASH" [(ngModel)]="model.PaymentType" />
+                <label for="CASH" class="label-1">CASH</label>
+              </div>
+
+              <div class="button-group">
+                <input type="radio" id="CARD" name="CARD" value="CARD" [(ngModel)]="model.PaymentType" />
+                <label for="CARD" class="label-1">CARD</label>
+              </div>
+
+
+
+
+            </div>
+            <button class="button-blue w-100" (click)="onSubmit()">Order Now</button>
+
+
+          </div>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div class="popup-backdrop" *ngIf="isPopupOpen">
+  <div class="popup">
+    <h5 class="postables mt-3">Restaurant POS <span>- Tables </span></h5>
+
+    <div class="table-grid" style="max-height: 60vh;overflow-y: scroll;">
+      <div class="table-card" *ngFor="let table of TablesDetails">
+        <div class="table-header">
+          <div class="table-num">{{table.TableNo}}</div>
+          <div [ngClass]="{
+       'TabOccupied': table.TableStatus === 'Occupied',
+       'TabAvailable': table.TableStatus === 'Available',
+      
+     }">{{table.TableStatus}}</div>
+        </div>
+        <div class="details">
+          <div class="orders"></div>
+          <div class="amount d-flex align-items-center justify-content-between">
+            <span>Table Capacity: </span>
+            <span class="total mx-1">{{table.TableCapacity}}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-blue"
+            [disabled]="!table.TableStatus || table.TableStatus === 'Available'" (click)="updatetablestatus('Available', table.TableNo)">Clear</button>
+          <button class="btn btn-green" [disabled]="!table.TableStatus || table.TableStatus === 'Available'">Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer d-flex align-items-center justify-content-end">
+      <div>
+        <button class="footer-btn" (click)="refreshTableData()"> <i class="bi bi-arrow-clockwise"></i> Refresh</button>
+        <button class="footer-btn" (click)="closePopup()"><i class="bi bi-x-circle"></i> Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popup-backdrop" *ngIf="isPopupOpen1">
+  <div class="popup1">
+    <div class="row">
+      <div class="col-md-12">
+        <h5 class="postables mt-3">Dine In<span>- Tables </span></h5>
+      </div>
+      <div class="col-md-12" style="text-align: start;">
+        <label for="exampleFormControlInput1" class="form-label">Table</label>
+        <select class="form-select" aria-label="Default select example" [(ngModel)]="model.TableNo">
+         <option *ngFor="let table of FillterTableNo" [value]="table.TableNo">
+  {{ table.TableNo }} --> {{ table.TableCapacity }}
+</option>
+        </select>
+      </div>
+      <div class="col-md-12" style="text-align: start;">
+        <label for="exampleFormControlInput1" class="form-label">Customer Name</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1" >
+      </div>
+      <div class="col-md-12"  style="text-align: start;">
+        <label for="exampleFormControlInput1" class="form-label">Total Person</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1" >
+      </div>
+    </div>
+    <div class="col-md-12 d-flex align-items-center justify-content-end mt-3">
+      <button (click)="isPopupOpen1 = false" class="dineinclose">Close</button>
+    </div>
+
+
+  </div>
+</div>

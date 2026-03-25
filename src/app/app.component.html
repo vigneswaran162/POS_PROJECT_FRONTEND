@@ -1,0 +1,15 @@
+<app-left-side-bar
+ 
+  [isLeftSideBarCollapsed]="isLeftSideBarCollapsed()"
+  (changeIsLeftSidebarCollapsed)="changeIsLeftSidebarCollapsed($event)">
+</app-left-side-bar>
+
+<app-main
+ 
+  [isLeftSideBarCollapsed]="isLeftSideBarCollapsed()"
+  [screenWidth]="screenWidth()">
+</app-main>
+
+<!-- <ng-container *ngIf="!islogintoken">
+<router-outlet />
+</ng-container> -->

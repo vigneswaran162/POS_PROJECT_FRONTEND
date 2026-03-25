@@ -1,0 +1,241 @@
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ItemMasterService } from '../../Services/item-master.service';
+import { CommonModule } from '@angular/common';
+
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx-js-style';
+
+@Component({
+  selector: 'app-item-sale-register',
+  imports: [FormsModule, CommonModule],
+  templateUrl: './item-sale-register.component.html',
+  styleUrl: './item-sale-register.component.css'
+})
+export class ItemSaleRegisterComponent {
+
+  fromDate: any;
+  toDate: any;
+  category: any;
+  ItemDetails: any;
+  itemCode: any;
+
+  filter = {
+    fromDate: '',
+    toDate: '',
+    category: '',
+    item: ''
+  };
+  reportData: any;
+
+
+  allData: any[] = [];
+  filteredData: any[] = [];
+  paginatedData: any[] = [];
+
+  searchText: string = '';
+
+  currentPage = 1;
+  pageSize = 5;
+  totalPages = 0;
+
+  constructor(private ItemMasterService: ItemMasterService) { }
+
+  async onsubmit() {
+    if (this.fromDate == undefined || this.toDate == undefined) {
+      alert("Please select both From Date and To Date")
+      return;
+    }
+    if (this.fromDate > this.toDate) {
+      alert("From Date cannot be greater than To Date")
+      return;
+    }
+    // if (this.category == undefined || this.category.trim() === "") {
+    //   alert("Please select a category")
+    //   return;
+    // }
+    // if (this.itemCode == undefined || this.itemCode.trim() === "") {
+    //   alert("Please select a item")
+    //   return;
+    // }
+
+    await this.loadReport();
+  }
+
+  onclear() {
+   this.paginatedData = [];
+    this.searchText = '';
+    this.filteredData = [];
+    this.currentPage = 1;
+    this.calculatePagination(); 
+  }
+  async GetItems() {
+    let result: any = await this.ItemMasterService.GetItemAll();
+    this.ItemDetails = result.filter((x: any) => x.Category == this.category);
+    console.log(this.ItemDetails);
+  }
+
+  async onItemChange() {
+    await this.GetItems();
+  }
+
+  async loadReport() {
+    this.filter = {
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+      category: this.category,
+      item: this.itemCode
+    }
+    let result: any = await this.ItemMasterService.getSalesReport(this.filter).toPromise();
+    this.allData = result;
+    this.filteredData = [...this.allData];
+    this.calculatePagination();
+  }
+
+
+  onSearch() {
+    const search = this.searchText.toLowerCase();
+
+    this.filteredData = this.allData.filter(item =>
+      (item.OrderNo?.toString().toLowerCase().includes(search)) ||
+      (item.OrderDate ? new Date(item.OrderDate).toLocaleDateString().toLowerCase().includes(search) : false) ||
+      (item.OrderType?.toLowerCase().includes(search)) ||
+      (item.PaymentType?.toLowerCase().includes(search)) ||
+      (item.ItemCount?.toString().includes(search)) ||
+      (item.TotalAmount?.toString().includes(search))
+    );
+
+    this.currentPage = 1;
+    this.calculatePagination();
+  }
+
+  // 📄 Pagination Logic
+  calculatePagination() {
+    this.totalPages = Math.ceil(this.filteredData.length / this.pageSize);
+
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.paginatedData = this.filteredData.slice(start, end);
+  }
+
+  changePage(page: number) {
+    this.currentPage = page;
+    this.calculatePagination();
+  }
+
+  exportToExcel() {
+
+    const data = this.filteredData.map(item => ({
+      ItemName: item.ItemName,
+      TotalQty: item.TotalQty,
+      TotalAmount: item.TotalAmount
+
+    }));
+
+    // 👉 Date Range
+    const fromDate = this.formatDate(this.fromDate);
+    const toDate = this.formatDate(this.toDate);
+
+    // 👉 Grand Total
+    const grandTotal = data.reduce((sum, item) => sum + Number(item.TotalAmount || 0), 0);
+
+    // 👉 Create empty sheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([]);
+
+    // 👉 Row 1: Heading
+    XLSX.utils.sheet_add_aoa(worksheet, [['Item Wise Sales Report']], { origin: 'A1' });
+
+    // 👉 Row 2: Subheading
+    XLSX.utils.sheet_add_aoa(worksheet, [[`From: ${fromDate}  To: ${toDate}`]], { origin: 'A2' });
+
+    // 👉 Data (Row 3 onwards)
+    XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A3' });
+
+    const colCount = Object.keys(data[0]).length;
+
+    // 👉 Grand Total Row
+    const totalRowIndex = data.length + 3;
+
+    XLSX.utils.sheet_add_aoa(worksheet, [[
+      'Grand Total', '', '', '', '', grandTotal
+    ]], { origin: `A${totalRowIndex}` });
+
+    // 👉 Merge Heading & Subheading
+    worksheet['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: colCount - 1 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: colCount - 1 } }
+    ];
+
+    // 👉 Heading Style
+    if (worksheet['A1']) {
+      worksheet['A1'].s = {
+        font: { bold: true, sz: 15 },
+        alignment: { horizontal: 'center' },
+        color: { rgb: '1F497D' }
+      };
+    }
+
+    // 👉 Subheading Style
+    if (worksheet['A2']) {
+      worksheet['A2'].s = {
+        alignment: { horizontal: 'center' },
+        font: { bold: true, sz: 12 },
+      };
+    }
+
+    // 👉 Column Headers Bold (Row 3)
+    for (let i = 0; i < colCount; i++) {
+      const cell = XLSX.utils.encode_cell({ r: 2, c: i });
+      if (worksheet[cell]) {
+        worksheet[cell].s = {
+          font: { bold: true }
+        };
+      }
+    }
+
+    // 👉 Grand Total Bold
+    for (let i = 0; i < colCount; i++) {
+      const cell = XLSX.utils.encode_cell({ r: totalRowIndex - 1, c: i });
+      if (worksheet[cell]) {
+        worksheet[cell].s = {
+          font: { bold: true }
+        };
+      }
+    }
+
+    // 👉 Column Width (~150px)
+    worksheet['!cols'] = new Array(colCount).fill({ wch: 22 });
+
+    // 👉 Workbook
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Item Wise Sales Report': worksheet },
+      SheetNames: ['Item Wise Sales Report']
+    };
+
+    // 👉 Generate Excel
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    this.saveExcelFile(excelBuffer, 'Item_Wise_SalesReport');
+  }
+
+  saveExcelFile(buffer: any, fileName: string) {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+
+    FileSaver.saveAs(data, fileName + '_' + new Date().getTime() + '.xlsx');
+  }
+
+  formatDate(date: any): string {
+    const d = new Date(date);
+    const day = ('0' + d.getDate()).slice(-2);
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+}
+

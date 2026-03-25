@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <div class="row row-content">
+        <div class="col-md-8 login-box p-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="../images/Secure login-bro.svg" class="img-fluid" alt="">
+                </div>
+                <div class="col-md-6 p-5">
+                    <div class="box mt-2">
+                           <h3 class="mb-4"> <span> SECURE  </span>LOGIN </h3>
+
+                    <!-- <div class="input-field my-3">
+        <input type="text" maxlength="1" minlength="1" class="no-spinner" [(ngModel)]="firstnumber" pattern="[0-9]*"
+          (blur)="onBlur($event,1)" (keyup)="moveFocus('1')" />
+        <input type="text" maxlength="1" minlength="1" class="no-spinner " #first [(ngModel)]="secondnumber"
+          pattern="[0-9]*" (blur)="onBlur($event,2)" (keyup)="moveFocus('2')" />
+        <input type="text" maxlength="1" minlength="1" class="no-spinner" #second [(ngModel)]="thirdnumber"
+          pattern="[0-9]*" (blur)="onBlur($event,3)" (keyup)="moveFocus('3')" />
+        <input type="text" maxlength="1" minlength="1" class="no-spinner" #third [(ngModel)]="fouruthnumber"
+          pattern="[0-9]*" (blur)="onBlur($event,4)" (keyup)="moveFocus('4')" />
+      </div> -->
+
+        <div class="pin-box">
+    <input *ngFor="let p of pin; let i = index"
+           type="password"
+           maxlength="1"
+           [value]="pin[i]"
+           readonly>
+  </div>
+
+        <div class="keypad mt-3">
+    <button *ngFor="let n of numbers" (click)="enterPin(n)">
+      {{ n }}
+    </button>
+
+
+  </div>
+
+    <div class="d-flex align-items-center justify-content-between gap-2 mt-3">
+                     <button class="clear btn-1" (click)="clearPin()">Clear</button>
+                    <button class=" button btn-1" [disabled]="pinIndex < 4" (click)="onlogin($event)">Login</button>
+    </div>
+           
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

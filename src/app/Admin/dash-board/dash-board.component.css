@@ -1,0 +1,66 @@
+.gird {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px !important;
+}
+.gird h2{
+    font-size: 19px !important;
+    font-weight: bolder !important;
+}
+.gird-box{
+    background-color: #fff !important;
+    padding: 20px !important;
+    border-radius: 5px !important;
+}
+.bi-graph-up-arrow{
+    background-color: #FFA62F !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    padding: 15px !important;
+    border-radius: 30px !important;
+}
+.bi-cart3{
+    background-color: #57ab12 !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    padding: 15px !important;
+    border-radius: 30px !important;
+}
+
+.bi-shop-window{
+    background-color: #E82C1D !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    padding: 15px !important;
+    border-radius: 30px !important;
+}
+
+.bi-basket{
+    background-color: #53ca92 !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    padding: 15px !important;
+    border-radius: 30px !important;
+}
+h3{
+    margin: 0px 20px !important;
+    font-size: 25px !important;
+    font-weight: bolder !important;
+}
+.pie-chart{
+
+    background-color: #fff !important;
+    border-radius: 10px !important;
+}
+.pie-chart h2{
+      font-size: 19px !important;
+    font-weight: bolder !important;
+}
+.top-itemname{
+    font-size: 18px !important;
+    font-weight: bolder !important;
+}
+.top-selling-food{
+       font-size: 20px !important;
+    font-weight: bolder !important; 
+}

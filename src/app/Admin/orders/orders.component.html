@@ -1,0 +1,145 @@
+<div class="container-fluid" style="height: 86vh;">
+    <div class="row ">
+        <div class="col-md-12 ">
+            <div class="row">
+                <div class="col-md-12 sticky-top top-box p-2 d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="mt-2 px-2">Orders <span>({{FillterOrderDetails.length}})</span></h6>
+                    <div class="d-flex">
+                        <div class="button-group">
+                            <input type="radio" id="All" name="All" checked value="All" [(ngModel)]="OrderType"
+                                (change)="onItemTypeChange($event)" />
+                            <label for="All">All</label>
+                        </div>
+
+                        <div class="button-group">
+                            <input type="radio" id="Pending" name="Pending" value="Pending" [(ngModel)]="OrderType"
+                                (change)="onItemTypeChange($event)" />
+                            <label for="Pending">Pending</label>
+                        </div>
+
+                        <div class="button-group">
+                            <input type="radio" id="Preparing" name="Preparing" value="Preparing"
+                                [(ngModel)]="OrderType" (change)="onItemTypeChange($event)" />
+                            <label for="Preparing">Preparing</label>
+                        </div>
+                        <div class="button-group">
+                            <input type="radio" id="Ready" name="Ready" value="Ready" [(ngModel)]="OrderType"
+                                (change)="onItemTypeChange($event)" />
+                            <label for="Ready">Ready</label>
+                        </div>
+                             <div class="button-group">
+                            <input type="radio" id="Cancel" name="Cancel" value="Cancel" [(ngModel)]="OrderType"
+                                (change)="onItemTypeChange($event)" />
+                            <label for="Cancel">Cancel</label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12 Orders mt-3" style="height: 82vh;overflow-y: scroll !important;overflow-x: hidden !important;">
+                    <div class="order-box bg-white p-3" *ngFor="let item of FillterOrderDetails">
+                        <div class="card-top d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="title-top">{{item.OrderNo}}</h6>
+                                <h6 class="title-top time">{{item.OrderDate | date:'dd/MM/yyyy hh:mm a'}}</h6>
+                            </div>
+                            <div>
+                                <span [ngClass]="{
+       'pending': item.OrderStatus === 'Pending',
+       'preparing': item.OrderStatus === 'Preparing',
+       'ready': item.OrderStatus === 'Ready',
+        'cancel': item.OrderStatus === 'Cancel'
+     }"><i class="bi bi-stopwatch"></i> {{item.OrderStatus}}</span> <br>
+     <span style="font-size: 12px;font-weight: 800;">{{item.OrderType}}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <table class="table">
+                                <tr>
+                                    <th>ITEM NAME</th>
+                                    <th>QTY</th>
+                                </tr>
+
+                                <ng-container *ngFor="let detail of item.OrderDetails; let i = index">
+                                    <tr *ngIf="i === 0">
+                                        <td>{{ detail.ItemName }}</td>
+                                        <td>{{ detail.Qty }}</td>
+                                    </tr>
+                                </ng-container>
+
+
+
+                            </table>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <button class="det-btn" (click)="OnClickDetails(item)">DETAILS</button>
+                            </div>
+                            <div>
+                                <button class="start-btn" *ngIf="item.OrderStatus === 'Pending'" (click)="OnSubmit(item,'Preparing')">START</button>
+                                 <button class="Preparing-btn" *ngIf="item.OrderStatus === 'Preparing'" (click)="OnSubmit(item,'Ready')">READY</button>
+                                <button class="Ready-btn" disabled *ngIf="item.OrderStatus === 'Ready'" (click)="OnSubmit(item,'Ready')">READY TO SERVE</button>
+                                 <button class="cancel-btn" disabled *ngIf="item.OrderStatus === 'Cancel'" (click)="OnSubmit(item,'Ready')">ORDER CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup-backdrop" *ngIf="isPopupOpen">
+    <div class="popup">
+        <div class="mb-3 d-flex align-items-center justify-content-between">
+      <div class="d-flex">      <h6 class="small-title">Order <span>Details</span></h6></div> <i class="bi bi-x-circle-fill" (click)="closePopup()"></i>
+        </div>
+
+        <div class="card-top d-flex align-items-center justify-content-between mb-3">
+            <div class="d-flex">
+                <div>
+ <i class="bi bi-plus-circle-fill mx-2" *ngIf="OrderDetailDet.OrderStatus !== 'Cancel'"></i>
+                </div>
+                <div>
+                    <h5 class="title-top-det">{{OrderDetailDet.OrderNo}}</h5>
+                <h6 class="title-top-det">{{OrderDetailDet.OrderDate |  date:'dd/MM/yyyy hh:mm a' }}</h6>
+                </div>
+            </div>
+            <span [ngClass]="{
+       'pending': OrderDetailDet.OrderStatus === 'Pending',
+       'preparing': OrderDetailDet.OrderStatus === 'Preparing',
+       'ready': OrderDetailDet.OrderStatus === 'Ready',
+        'cancel': OrderDetailDet.OrderStatus === 'Cancel'
+     }"><i class="bi bi-stopwatch"></i> {{OrderDetailDet.OrderStatus}}</span>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-3"><span class="span-title">OrderType: {{OrderDetailDet.OrderType}}</span>  <span class="span-title">PaymentType:{{OrderDetailDet.PaymentType}}</span></div>
+        <div class="card-box">
+            <table class="table">
+                <tr>
+                    <th>SNO.</th>
+                    <th>ITEM NAME</th>
+                    <th>QTY</th>
+                    <th>Amount</th>
+                </tr>
+                <tr *ngFor="let detail of OrderDetailDet.OrderDetails;let i= index;">
+                            <td>{{ i+1}}</td>
+                    <td>{{ detail.ItemName }}</td>
+                    <td>{{ detail.Qty }}</td>
+                            <td>{{ detail.Amount }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-bottom d-flex align-items-center justify-content-between">
+            <div>
+                <button class="Cancel-btn" *ngIf="OrderDetailDet.OrderStatus !== 'Cancel'"  (click)="OnSubmit(OrderDetailDet,'Cancel')">Cancel Order</button>
+            </div>
+             <div>
+                <button class="start-btn" *ngIf="OrderDetailDet.OrderStatus !== 'Cancel'" (click)="OnSubmit(OrderDetailDet,'Preparing')">Start</button>
+            </div>
+        </div>
+
+
+        <!-- <button (click)="closePopup()">Close</button> -->
+    </div>
+</div>

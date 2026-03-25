@@ -1,0 +1,71 @@
+.box{
+    background-color: #ffff ;
+    border-radius: 20px;
+}
+label{
+      color: #666;
+}
+
+input:focus,input:hover{
+    box-shadow: none !important;
+    border: 1px solid #c5c5c5 !important;
+}
+
+.button{
+    background-color: #FFA62F;;
+    border: none;
+    padding: 8px 15px !important;
+    font-weight:500;
+    color: #F7F7F7 !important;
+    letter-spacing: 1px !important;
+    border-radius: 20px !important;
+}
+
+.button-clear{
+    background-color:#30336b;
+    border: none;
+    padding: 8px 15px !important;
+    font-weight:500;
+    color: #F7F7F7 !important;
+    letter-spacing: 1px !important;
+    border-radius: 20px !important;
+}
+
+h5{
+    font-weight: 700;
+    color: #FFA62F;
+    letter-spacing: 1px;
+}
+h5 span{
+    color: #30336b;
+}
+input{
+       color: #37353E !important;
+}
+.bi-clipboard-check{
+     color: #37353E !important;
+     cursor: pointer;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #30336b;;   /* your color */
+    border-color: #30336b;;
+    color: white;
+}
+
+.pagination .page-link {
+    color: #30336b;;
+}
+
+.pagination .page-link:hover {
+    background-color: #30336b;
+    color: white;
+}
+.button-excel{
+    background-color: #2ecc71;
+    color: #F7F7F7 !important;
+    border: none;
+    padding: 10px 15px !important;
+    font-weight:500;
+    border-radius: 20px !important;
+}
