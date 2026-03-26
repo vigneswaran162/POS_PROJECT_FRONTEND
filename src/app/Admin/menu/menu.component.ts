@@ -19,12 +19,12 @@ export class MenuComponent implements OnInit {
   OrderDet: any[] = [];
   TotalAmount: any;
   model: OrderMasterModel;
-    isPopupOpen = false;
-    isPopupOpen1:boolean=false;
+  isPopupOpen = false;
+  isPopupOpen1: boolean = false;
   TablesDetails: any;
   FillterTableNo: any = [];
 
-  constructor(private service: ItemMasterService, private Toast: ToastService,private OrderService:OrdermasterService) { }
+  constructor(private service: ItemMasterService, private Toast: ToastService, private OrderService: OrdermasterService) { }
 
   async ngOnInit() {
     this.OrderDet = [];
@@ -46,9 +46,9 @@ export class MenuComponent implements OnInit {
       if (ItemType == 'AllMenu') {
         this.ItemDetails = response;
       } else {
-      this.ItemDetails = response.filter((i: any) => 
-  i?.Category?.toLowerCase?.() === ItemType?.toLowerCase?.()
-);
+        this.ItemDetails = response.filter((i: any) =>
+          i?.Category?.toLowerCase?.() === ItemType?.toLowerCase?.()
+        );
 
       }
 
@@ -138,12 +138,12 @@ export class MenuComponent implements OnInit {
     mod.OrderDate = new Date();
     mod.CustomerName = this.model.CustomerName;
     mod.PaymentType = this.model.PaymentType;
-    mod.PaymentStatus = this.model.PaymentType == "" ? 'Paid':'Unpaid';
+    mod.PaymentStatus = this.model.PaymentType == "" ? 'Paid' : 'Unpaid';
     mod.TotalAmount = this.TotalAmount;
     mod.OrderStatus = "Pending";
     mod.OrderType = this.model.OrderType;
     mod.DeliveryAddress = this.model.DeliveryAddress;
-    mod.CustomerPhoneNo  = this.model.CustomerPhoneNo;
+    mod.CustomerPhoneNo = this.model.CustomerPhoneNo;
     mod.TableNo = this.model.TableNo;
     mod.OrderDetails = [];
     for (let i = 0; i < this.OrderDet.length; i++) {
@@ -173,42 +173,40 @@ export class MenuComponent implements OnInit {
 
 
 
-    formvalidation(): boolean {
-// if (this.OrderDet.length > 0) {
-//   this.Toast.show("Maximum one order can be allowed");
-//   return false;
-// }
+  formvalidation(): boolean {
+    if (this.OrderDet.length > 0) {
+      this.Toast.show("Maximum one order can be allowed");
+      return false;
+    }
+    if (!this.model.OrderType || this.model.OrderType.trim() === "") {
+      this.Toast.show("Please Select Order Type");
+      return false;
+    }
+
+    if (!this.model.PaymentType || this.model.PaymentType.trim() === "") {
+      this.Toast.show("Please Select Payment Type");
+      return false;
+    }
 
 
- if (!this.model.OrderType || this.model.OrderType.trim() === "") {
-    this.Toast.show("Please Select Order Type");
-    return false;
+    return true;
   }
-
-  if (!this.model.PaymentType || this.model.PaymentType.trim() === "") {
-    this.Toast.show("Please Select Payment Type");
-    return false;
-  }
-
-
-  return true;
-}
 
 
   onSubmit() {
-    if(this.formvalidation()){
-    const editmod = this.preparemodel()
-    this.CRUD(editmod)
+    if (this.formvalidation()) {
+      const editmod = this.preparemodel()
+      this.CRUD(editmod)
     }
   }
 
-  async updatetablestatus(TableStatus:any, TableNo:any) {
+  async updatetablestatus(TableStatus: any, TableNo: any) {
     let response: any = await this.OrderService.updatetablestatus(TableStatus, TableNo).catch((err) => {
       alert(err.message)
-    }); 
-    if (response != undefined) { 
-       this.GetTablesAll()
-     }
+    });
+    if (response != undefined) {
+      this.GetTablesAll()
+    }
   }
 
   async CRUD(_model: OrderMasterModel) {
@@ -218,27 +216,27 @@ export class MenuComponent implements OnInit {
     });
     if (response != undefined) {
       if (response.BoolVal == true) {
-         this.OrderDet=[]
-         this.Toast.showalert('Your order has been placed successfully !');
+        this.OrderDet = []
+        this.Toast.showalert('Your order has been placed successfully !');
       } else {
-         this.Toast.showalert(response.error);
+        this.Toast.showalert(response.error);
       }
     }
   }
 
-OnChangeOrderType(){
-      if(this.model.OrderType === 'Dine In'){
-        this.FillterTableNo = this.TablesDetails.filter((i: any) => i.TableStatus === 'Available' )
-        this.isPopupOpen1 = true;
-      }else{
-        this.FillterTableNo = [];
-        this.model.TableNo = '';
-        this.isPopupOpen1 = false;
-      }   
-}
- 
+  OnChangeOrderType() {
+    if (this.model.OrderType === 'Dine In') {
+      this.FillterTableNo = this.TablesDetails.filter((i: any) => i.TableStatus === 'Available')
+      this.isPopupOpen1 = true;
+    } else {
+      this.FillterTableNo = [];
+      this.model.TableNo = '';
+      this.isPopupOpen1 = false;
+    }
+  }
 
- 
+
+
 
   closePopup() {
     this.isPopupOpen = false;
