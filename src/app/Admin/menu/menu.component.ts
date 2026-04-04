@@ -174,15 +174,14 @@ export class MenuComponent implements OnInit {
 
 
   formvalidation(): boolean {
-    if (this.OrderDet.length > 0) {
-      this.Toast.show("Maximum one order can be allowed");
+    if (this.OrderDet.length == 0) {
+      this.Toast.show("Please add items to the order");
       return false;
     }
     if (!this.model.OrderType || this.model.OrderType.trim() === "") {
       this.Toast.show("Please Select Order Type");
       return false;
     }
-
     if (!this.model.PaymentType || this.model.PaymentType.trim() === "") {
       this.Toast.show("Please Select Payment Type");
       return false;
