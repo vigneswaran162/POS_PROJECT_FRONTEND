@@ -36,10 +36,10 @@ export class DashBoardComponent implements OnInit {
 
 
   async GetOrderTypeCount() {
-    this.isLoading = false
+    this.isLoading = true
     let response: any = await this.OrderService.GetOrderTypeCount().catch(err => {
       alert(err.message)
-      this.isLoading = true
+      this.isLoading = false;
     })
     if (response != undefined) {
 
@@ -120,9 +120,9 @@ const chartDom1 = document.getElementById('salesBarChart');
     myChart1.setOption(option1);
 
 
-
+      this.isLoading = false;
     } else {
-      this.isLoading = true
+      this.isLoading = false
       alert(response.error)
     }
   }
@@ -136,10 +136,10 @@ const chartDom1 = document.getElementById('salesBarChart');
 
   
   async GetProducts() {
-    this.isLoading = false
+    this.isLoading = true
     let response: any = await this.OrderService.GetItemAll().catch(err => {
       alert(err.message)
-      this.isLoading = true
+      this.isLoading = false
     })
     if (response != undefined) {
     this.ItemDetails = response;
@@ -152,9 +152,9 @@ const chartDom1 = document.getElementById('salesBarChart');
            this.itemImageMap.set(event.ItemCode,event.ItemImage);
         }
       });
-      this.isLoading = true
+      this.isLoading = false
     } else {
-      this.isLoading = true
+      this.isLoading = false
       alert(response.error)
     }
   

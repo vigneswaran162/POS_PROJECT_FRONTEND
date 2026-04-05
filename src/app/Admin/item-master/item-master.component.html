@@ -1,7 +1,7 @@
 <div class="container" style="height: 85vh;">
     <div class="row d-flex align-items-center justify-content-center">
-        <div class="col-md-10 p-5 box">
-            <h5 class="mb-4"><i class="bi bi-clipboard-check" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ></i> ITEM <span>MASTER</span> </h5>
+        <div class="col-md-10 p-5 box" *ngIf="!ItemDetailslist">
+            <h5 class="mb-4"><i class="bi bi-clipboard-check" (click)="ItemDetailslist = true" ></i> ITEM <span>MASTER</span> </h5>
             <div class="row ">
                 <div class="col-md-6">
                     <div class="mb-3">
@@ -73,6 +73,72 @@
 
             </div>
         </div>
+        
+        <div class="col-md-10 p-5 box" *ngIf="ItemDetailslist">
+            <h5 class="mb-4"><i class="bi bi-clipboard-check" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="ItemDetailslist = !ItemDetailslist"  ></i> ITEM <span>MASTER</span> LIST</h5>
+            <div class="row">
+                 <table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+      <tr>
+         <th>SNo.</th>
+         <th>Item Code</th>
+       <th>Item Name</th>
+      <th>Rate</th>
+      <th>UOM</th>
+      <th>Category</th>
+       <th>Actions</th>
+    
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of ItemDetails; let i = index">
+                 <td>{{ i + 1 }}</td>
+            <td>{{ item.ItemCode }}</td>
+       <td>{{ item.ItemName }}</td>
+      <td>{{ item.Rate }}</td>
+      <td>{{ item.UOM }}</td>
+   <td>{{ item.Category }}</td>
+      <td>
+        <button class="btn btn-sm btn-success mx-2"><i class="bi bi-pencil-square"></i></button>
+        <button class="btn btn-sm btn-danger"><i class="bi bi-trash3"></i></button>
+      </td>
+      
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 📄 Pagination -->
+  <nav class="d-flex align-items-center justify-content-between">
+    <ul class="pagination">
+
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">
+          Prev
+        </button>
+      </li>
+
+      <li class="page-item"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1">
+        <button class="page-link" (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">
+          Next
+        </button>
+      </li>
+
+    </ul>
+
+  </nav>
+
+            </div>
+        </div>
+
+
     </div>
 </div>
 

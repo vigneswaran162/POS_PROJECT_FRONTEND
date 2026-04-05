@@ -43,18 +43,18 @@ export class OrdersComponent implements OnInit {
 
 
   async GetOrderAll() {
-    this.isLoading = false
+    this.isLoading = true
     let response: any = await this.OrderService.GetOrderAll().catch(err => {
       alert(err.message)
-      this.isLoading = true
+      this.isLoading = false
     })
     if (response != undefined) {
       this.OrderDetails = response.sort((a: any, b: any) => new Date(b.OrderDate).getTime() - new Date(a.OrderDate).getTime());;
       this.FillterOrderDetails = this.OrderDetails;
-      this.isLoading = true
+      this.isLoading = false
 
     } else {
-      this.isLoading = true
+      this.isLoading = false
       alert(response.error)
     }
   }
@@ -77,9 +77,7 @@ export class OrdersComponent implements OnInit {
       this.isLoading = false
     })
     if (response != undefined) {
-     
       await this.GetOrderAll()
-
     } else {
       this.isLoading = false
       alert(response.error)

@@ -1,0 +1,128 @@
+<div class="container" style="height: 85vh;">
+  <div class="row d-flex align-items-center justify-content-center">
+
+    <!-- 🔹 FORM -->
+    <div class="col-md-10 p-5 box" *ngIf="!TableDetailsList">
+      <h5 class="mb-4">
+        <i class="bi bi-table" (click)="TableDetailsList = true"></i>
+        TABLE <span>MASTER</span>
+      </h5>
+
+      <div class="row">
+
+        <div class="col-md-6">
+          <label class="form-label">Table No <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="tableModel.TableNo">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Table Name <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="tableModel.TableName">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Capacity <span class="text-danger">*</span></label>
+          <input type="number" class="form-control" [(ngModel)]="tableModel.TableCapacity">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Status <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="tableModel.TableStatus">
+            <option value="Available">Available</option>
+            <option value="Occupied">Occupied</option>
+            <option value="Reserved">Reserved</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">From Time</label>
+          <input type="time" class="form-control" [(ngModel)]="tableModel.TableFromTime">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">To Time</label>
+          <input type="time" class="form-control" [(ngModel)]="tableModel.TableToTime">
+        </div>
+
+        <div class="col-md-12 mt-4 d-flex justify-content-end">
+          <button class="button-clear mx-2" (click)="clearTable()">Clear</button>
+          <button class="button" (click)="saveTable()">Submit</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 🔹 LIST -->
+    <div class="col-md-10 p-5 box" *ngIf="TableDetailsList">
+      <h5 class="mb-4">
+        <i class="bi bi-table" (click)="TableDetailsList = false"></i>
+        TABLE <span>MASTER LIST</span>
+      </h5>
+
+      <table class="table table-bordered table-striped mt-3">
+        <thead class="table-dark">
+          <tr>
+              <th>SNo.</th>
+            <th>Table No</th>
+            <th>Name</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let t of TableDetails;let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ t.TableNo }}</td>
+            <td>{{ t.TableName }}</td>
+            <td>{{ t.TableCapacity }}</td>
+            <td>{{ t.TableStatus }}</td>
+            <td>{{ t.TableFromTime }}</td>
+            <td>{{ t.TableToTime }}</td>
+            <td>
+              <button class="btn btn-sm btn-success mx-2">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn btn-sm btn-danger">
+                <i class="bi bi-trash3"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+       <!-- 📄 Pagination -->
+  <nav class="d-flex align-items-center justify-content-between">
+    <ul class="pagination">
+
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">
+          Prev
+        </button>
+      </li>
+
+      <li class="page-item"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1">
+        <button class="page-link" (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">
+          Next
+        </button>
+      </li>
+
+    </ul>
+
+  </nav>
+
+    </div>
+
+  </div>
+</div>

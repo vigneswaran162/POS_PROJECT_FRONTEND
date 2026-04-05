@@ -71,7 +71,7 @@ export class ItemSaleRegisterComponent {
   }
   async GetItems() {
     let result: any = await this.ItemMasterService.GetItemAll();
-    this.ItemDetails = result.filter((x: any) => x.Category == this.category);
+    this.ItemDetails = result
     console.log(this.ItemDetails);
   }
 

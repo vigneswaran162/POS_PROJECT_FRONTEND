@@ -27,20 +27,21 @@ export class MenuComponent implements OnInit {
   constructor(private service: ItemMasterService, private Toast: ToastService, private OrderService: OrdermasterService) { }
 
   async ngOnInit() {
+    this.isLoading = true;
     this.OrderDet = [];
     await this.GetProducts(this.ItemType);
     await this.GetTablesAll();
     this.model = new OrderMasterModel();
-
+    this.isLoading = false;
   }
 
 
 
   async GetProducts(ItemType: string) {
-    this.isLoading = false
+    this.isLoading = true
     let response: any = await this.service.GetItemAll().catch(err => {
       alert(err.message)
-      this.isLoading = true
+      this.isLoading = false
     })
     if (response != undefined) {
       if (ItemType == 'AllMenu') {
@@ -59,10 +60,10 @@ export class MenuComponent implements OnInit {
           }
         }
       });
-      this.isLoading = true
+      this.isLoading = false
 
     } else {
-      this.isLoading = true
+      this.isLoading = false
       alert(response.error)
     }
   }
@@ -209,16 +210,20 @@ export class MenuComponent implements OnInit {
   }
 
   async CRUD(_model: OrderMasterModel) {
+    this.isLoading = true;
     let response: any = await this.OrderService.CRUD(_model).catch((err) => {
       this.Toast.showalert(err.message);
-      alert(err.message)
+      alert(err.message);
+      this.isLoading = false;
     });
     if (response != undefined) {
       if (response.BoolVal == true) {
         this.OrderDet = []
         this.Toast.showalert('Your order has been placed successfully !');
+           this.isLoading = false;
       } else {
         this.Toast.showalert(response.error);
+           this.isLoading = false;
       }
     }
   }
@@ -243,17 +248,17 @@ export class MenuComponent implements OnInit {
 
 
   async GetTablesAll() {
-    this.isLoading = false
+    this.isLoading = true
     let response: any = await this.service.GetTablesAll().catch(err => {
       alert(err.message)
-      this.isLoading = true
+      this.isLoading = false
     })
     if (response != undefined) {
       this.TablesDetails = response;
-      this.isLoading = true
+      this.isLoading = false
 
     } else {
-      this.isLoading = true
+      this.isLoading = false
       alert(response.error)
     }
   }

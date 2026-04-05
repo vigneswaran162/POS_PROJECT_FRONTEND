@@ -31,7 +31,13 @@ changeIsLeftSidebarCollapsed = output<boolean>();
   routerLink:'itemmaster',
    icon:'bi bi-clipboard-check',
    label:'Item Master'
-  },{
+  },
+  {
+      routerLink:'TableMaster',
+   icon:'bi bi-table',
+   label:'Table Master'
+  },
+  {
       routerLink:'Report',
    icon:'bi bi-file-bar-graph',
    label:'Sales Report'

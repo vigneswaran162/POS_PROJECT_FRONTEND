@@ -3,7 +3,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="col-md-12 sticky-top top-box p-2 d-flex align-items-center justify-content-between mb-2">
-          <h6 class="mt-2 px-2">Menu Item <span>({{ItemDetails.length}})</span></h6>
+          <h6 class="mt-2 px-2">Menu Item <span>({{ItemDetails?.length}})</span></h6>
 
 
 
@@ -192,7 +192,7 @@
         </div>
         <div class="actions">
           <button class="btn btn-blue"
-            [disabled]="!table.TableStatus || table.TableStatus === 'Available'" (click)="updatetablestatus('Available', table.TableNo)">Clear</button>
+          (click)="updatetablestatus('Available', table.TableNo)">Clear</button>
           <button class="btn btn-green" [disabled]="!table.TableStatus || table.TableStatus === 'Available'">Add Item
           </button>
         </div>
@@ -236,4 +236,16 @@
 
 
   </div>
+</div>
+
+
+
+
+<div *ngIf="isLoading" class="loader-wrapper">
+<div class="three-body">
+<div class="three-body__dot"></div>
+<div class="three-body__dot"></div>
+<div class="three-body__dot"></div>
+</div>
+
 </div>
