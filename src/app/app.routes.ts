@@ -6,6 +6,7 @@ import { OrdersComponent } from './Admin/orders/orders.component';
 import { ItemMasterComponent } from './Admin/item-master/item-master.component';
 import { ReportComponent } from './Admin/report/report.component';
 import { ItemSaleRegisterComponent } from './Admin/item-sale-register/item-sale-register.component';
+import { TableMasterComponent } from './Admin/table-master/table-master.component';
 
 export const routes: Routes = [
     // {
@@ -35,5 +36,8 @@ export const routes: Routes = [
    {
         path:'itemsaleregister',
         component:ItemSaleRegisterComponent
+    },{
+        path:'TableMaster',
+        component:TableMasterComponent
     }
 ];
