@@ -1,16 +1,266 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+:root {
+  /* legacy tokens (kept for compatibility) */
+  --main-color: #A294F9;
+  --secondary-color: #37353E;
+  --white-color: #F7F7F7;
+  --btn-color: #A2AADB;
 
-*{
-    font-family: "Montserrat", sans-serif !important; 
+  /* brand */
+  --c-primary: #FFA62F;
+  --c-primary-hover: #f09513;
+  --c-primary-soft: #fdf0dc;
+  --c-secondary: #30336b;
+  --c-secondary-hover: #25285a;
+  --c-secondary-soft: #e4e5f7;
+  --c-success: #2fa66a;
+  --c-danger: #e5484d;
+  --c-warning: #f59e0b;
 
+  /* surfaces & text */
+  --c-bg: #f3f4f8;
+  --c-surface: #ffffff;
+  --c-border: #e6e8ef;
+  --c-border-strong: #cfd3df;
+  --c-text: #1f2233;
+  --c-text-muted: #6b7185;
+  --c-text-soft: #9aa0b4;
 
+  /* spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --page-pad: clamp(0.75rem, 2.5vw, 2rem);
+
+  /* radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* shadows */
+  --shadow-sm: 0 1px 2px rgba(31, 34, 51, 0.06);
+  --shadow-md: 0 4px 14px rgba(31, 34, 51, 0.08);
+  --shadow-lg: 0 18px 40px rgba(31, 34, 51, 0.18);
+
+  /* type */
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.8125rem;
+  --fs-md: 0.9375rem;
+  --fs-lg: clamp(1.05rem, 1vw + 0.8rem, 1.25rem);
+
+  /* motion */
+  --t-fast: 150ms;
+  --t-base: 250ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  --focus-ring: 0 0 0 3px rgba(255, 166, 47, 0.3);
 }
-:root{
-     --main-color: #A294F9;
-     --secondary-color:#37353E;
-     --white-color:#F7F7F7;
-     --btn-color:#A2AADB;
-    
+
+* {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; }
+
+/* nicer scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border-strong) transparent;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--c-border-strong); border-radius: var(--radius-pill); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* accessible focus for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   FORMS
+   ========================================================= */
+.form-label,
+label {
+  color: var(--c-text-muted);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.form-control,
+.form-select {
+  min-height: 42px;
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--c-text);
+  font-size: var(--fs-md);
+  background-color: var(--c-surface);
+  transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.form-control:hover,
+.form-select:hover {
+  border-color: var(--c-text-soft);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--c-primary);
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+.form-control::placeholder { color: var(--c-text-soft); }
+
+/* =========================================================
+   BUTTONS (shared by master / report pages)
+   ========================================================= */
+.button,
+.button-clear,
+.button-excel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 42px;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.button { background: var(--c-primary); }
+.button:hover { background: var(--c-primary-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.button-clear { background: var(--c-secondary); }
+.button-clear:hover { background: var(--c-secondary-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.button-excel { background: var(--c-success); }
+.button-excel:hover { filter: brightness(0.94); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.button:active, .button-clear:active, .button-excel:active { transform: translateY(0); }
+.button:focus-visible, .button-clear:focus-visible, .button-excel:focus-visible { box-shadow: var(--focus-ring); outline: none; }
+.button:disabled, .button-clear:disabled, .button-excel:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-sm { border-radius: var(--radius-sm); }
+
+/* =========================================================
+   PAGE CARD (.box) AND TITLE
+   ========================================================= */
+.box {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: clamp(1rem, 3vw, 2.25rem) !important;
+}
+
+h5 {
+  font-weight: 700;
+  color: var(--c-primary);
+  letter-spacing: 0.06em;
+  font-size: var(--fs-lg);
+}
+h5 span { color: var(--c-secondary); }
+h5 .bi { color: var(--c-secondary); cursor: pointer; margin-right: var(--space-2); transition: color var(--t-fast); }
+h5 .bi:hover { color: var(--c-primary); }
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+.table {
+  --bs-table-bg: transparent;
+  border-color: var(--c-border);
+  font-size: var(--fs-sm);
+}
+.table > :not(caption) > * > * { padding: 0.75rem 0.9rem; vertical-align: middle; }
+.table thead.table-dark,
+.table thead.table-dark th {
+  background: var(--c-secondary);
+  border-color: var(--c-secondary);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.table-striped > tbody > tr:nth-of-type(odd) > * { --bs-table-accent-bg: #f8f9fc; }
+.table tbody tr { transition: background-color var(--t-fast); }
+.table tbody tr:hover > * { background-color: var(--c-primary-soft); }
+
+/* wide tables scroll inside the card on small screens */
+.box { overflow-x: auto; }
+.table { width: 100%; }
+
+/* icon action buttons */
+.btn-success, .btn-danger {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: filter var(--t-fast), transform var(--t-fast);
+}
+.btn-success { background: var(--c-success); }
+.btn-danger { background: var(--c-danger); }
+.btn-success:hover, .btn-danger:hover { filter: brightness(0.92); transform: translateY(-1px); }
+
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+.pagination { gap: var(--space-1); flex-wrap: wrap; margin: 0; }
+.pagination .page-link {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm) !important;
+  color: var(--c-secondary);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  min-width: 36px;
+  min-height: 36px;
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.pagination .page-link:hover { background: var(--c-secondary-soft); color: var(--c-secondary); }
+.pagination .page-link:focus { box-shadow: var(--focus-ring); }
+.pagination .page-item.active .page-link { background: var(--c-secondary); border-color: var(--c-secondary); color: #fff; }
+.pagination .page-item.disabled .page-link { opacity: 0.5; }
+
+nav.d-flex { flex-wrap: wrap; gap: var(--space-3); }
+
+/* =========================================================
+   PAGE-LEVEL HELPERS
+   ========================================================= */
+/* fixed viewport heights in templates should not trap content on small screens */
+@media (max-width: 991.98px) {
+  .container[style*="height"],
+  .container-fluid[style*="height"] {
+    height: auto !important;
+    padding-bottom: var(--space-6);
+  }
+}
+
+/* page cards use the full width on small screens */
+@media (max-width: 767.98px) {
+  .container { padding-left: 0; padding-right: 0; }
+  .box .row > [class*="col-"] { margin-bottom: 0.25rem; }
 }

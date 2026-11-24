@@ -1,48 +1,20 @@
-.box{
-    background-color: #ffff ;
-    border-radius: 20px;
-}
-label{
-      color: #666;
+/* Shared styles (.box, .button, forms, tables, pagination) live in src/styles.css */
+.container {
+  max-width: 1100px;
 }
 
-input:focus,input:hover{
-    box-shadow: none !important;
-    border: 1px solid #c5c5c5 !important;
+.box .row > [class*="col-md-6"] {
+  margin-bottom: 0.25rem;
 }
 
-.button{
-    background-color: #FFA62F;;
-    border: none;
-    padding: 8px 15px !important;
-    font-weight:500;
-    color: #F7F7F7 !important;
-    letter-spacing: 1px !important;
-    border-radius: 20px !important;
-}
-
-.button-clear{
-    background-color:#30336b;
-    border: none;
-    padding: 8px 15px !important;
-    font-weight:500;
-    color: #F7F7F7 !important;
-    letter-spacing: 1px !important;
-    border-radius: 20px !important;
-}
-
-h5{
-    font-weight: 700;
-    color: #FFA62F;
-    letter-spacing: 1px;
-}
-h5 span{
-    color: #30336b;
-}
-input{
-       color: #37353E !important;
-}
-.bi-clipboard-check{
-     color: #37353E !important;
-     cursor: pointer;
+@media (max-width: 575.98px) {
+  .box .d-flex.justify-content-end {
+    flex-direction: column-reverse;
+    align-items: stretch !important;
+    gap: var(--space-3);
+  }
+  .box .d-flex.justify-content-end > button {
+    width: 100%;
+    margin: 0 !important;
+  }
 }

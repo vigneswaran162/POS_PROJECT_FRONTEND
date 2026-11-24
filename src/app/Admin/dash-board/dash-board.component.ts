@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ToastService } from '../../Services/toast.service';
 import { OrdermasterService } from '../../Services/ordermaster.service';
 import { CommonModule } from '@angular/common';
-  declare var echarts: any;
 
 @Component({
   selector: 'app-dash-board',
@@ -57,69 +56,6 @@ this.TopSellingFoods = response.response5.map((food: any) => {
   };
 });
 console.log(this.TopSellingFoods,'helooo')
-const chartDom = document.getElementById('orderTypeRevenueChart');
-const myChart = echarts.init(chartDom);
-
-const option = {
-  tooltip: {
-    trigger: 'item',
-    formatter: '{b} : ₹ {c} ({d}%)'
-  },
-  legend: {
-    show: false,
-    orient: 'vertical',
-    left: 'left'
-  },
-  series: [
-    {
-      name: 'Revenue',
-      type: 'pie',
-      radius: '60%',
-      data: this.OrderTypeRevenue.map((x: any) => ({
-        name: x.OrderType,
-        value: x.grandTotal
-      })),
-      label: {
-        formatter: '{b}\n₹ {c}'
-      },
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0
-        }
-      }
-    }
-  ]
-};
-
-myChart.setOption(option);
-const chartDom1 = document.getElementById('salesBarChart');
-    const myChart1 = echarts.init(chartDom1);
-
-    const option1 = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      xAxis: {
-        type: 'category',
-        data: this.salesBarChart.map((item:any) => item.date)
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          name: 'Sales',
-          type: 'bar',
-          data: this.salesBarChart.map((item:any) => item.totalSales),
-          barWidth: '50%'
-        }
-      ]
-    };
-
-    myChart1.setOption(option1);
-
-
       this.isLoading = false;
     } else {
       this.isLoading = false
@@ -128,6 +64,41 @@ const chartDom1 = document.getElementById('salesBarChart');
   }
 
 
+
+
+  readonly palette: string[] = ['#6c5ce7', '#ff9f43', '#00b894', '#ff6b81', '#0984e3', '#fdcb6e'];
+
+  // ---- CSS chart helpers (presentation only) ----
+  get maxSales(): number {
+    const v = (this.salesBarChart || []).map((x: any) => Number(x.totalSales) || 0);
+    return Math.max(1, ...v);
+  }
+
+  barHeight(value: any): number {
+    return Math.round(((Number(value) || 0) / this.maxSales) * 100);
+  }
+
+  get revenueSlices(): { name: string; value: number; percent: number; color: string }[] {
+    const data = this.OrderTypeRevenue || [];
+    const total = data.reduce((t: number, x: any) => t + (Number(x.grandTotal) || 0), 0) || 1;
+    return data.map((x: any, i: number) => ({
+      name: x.OrderType,
+      value: Number(x.grandTotal) || 0,
+      percent: Math.round(((Number(x.grandTotal) || 0) / total) * 100),
+      color: this.palette[i % this.palette.length]
+    }));
+  }
+
+  get donutGradient(): string {
+    let acc = 0;
+    const total = this.revenueSlices.reduce((t, x) => t + x.value, 0) || 1;
+    const stops = this.revenueSlices.map(sl => {
+      const start = acc;
+      acc += (sl.value / total) * 100;
+      return `${sl.color} ${start}% ${acc}%`;
+    });
+    return stops.length ? `conic-gradient(${stops.join(', ')})` : 'conic-gradient(#e6e8ef 0 100%)';
+  }
 
   loadChart() {
     

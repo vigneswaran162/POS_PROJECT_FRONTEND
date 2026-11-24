@@ -12,33 +12,40 @@ export class ItemMasterService {
 
 
   async GetItemAll() {
-    this.APIUrl = 'https://pos-project-backend-tf38.onrender.com/api/GetItem';
+    this.APIUrl = 'https://posbackend-psi.vercel.app/api/GetItem';
     let res = await this.http.get(this.APIUrl).toPromise()
     return res
   }
 
     async GetTablesAll() {
-    this.APIUrl = 'https://pos-project-backend-tf38.onrender.com/api/GetTables';
+    this.APIUrl = 'https://posbackend-psi.vercel.app/api/GetTables';
     let res = await this.http.get(this.APIUrl).toPromise()
     return res
   }
 
 
   getSalesReport(filter: any) {
-  return this.http.get<any>('https://pos-project-backend-tf38.onrender.com/api/SalesReport', {
+  return this.http.get<any>('https://posbackend-psi.vercel.app/api/SalesReport', {
+    params: filter
+  });
+}
+  getItemWiseSalesReport(filter: any) {
+  return this.http.get<any>('https://posbackend-psi.vercel.app/api/ItemWiseSalesReport', {
     params: filter
   });
 }
 
+
+
   async CRUD(entity:any): Promise<any> {
   if (entity.OpsType == "S") {
-    this.APIUrl = 'https://pos-project-backend-tf38.onrender.com/api/Itemcreate';
+    this.APIUrl = 'https://posbackend-psi.vercel.app/api/Itemcreate';
   }
   else if (entity.OpsType == "U") {
-    this.APIUrl = 'https://pos-project-backend-tf38.onrender.com/api/AddEvents/Update';
+    this.APIUrl = 'https://posbackend-psi.vercel.app/api/AddEvents/Update';
   }
   else if (entity.OpsType == "V") {
-    this.APIUrl = 'https://pos-project-backend-tf38.onrender.com/api/AddEvents/Delete';
+    this.APIUrl = 'https://posbackend-psi.vercel.app/api/AddEvents/Delete';
   }
   let headers = new HttpHeaders({
     'content-Type': 'application/json',

@@ -1,12 +1,14 @@
 .body {
   width: calc(100% - 5rem);
   margin-left: 5rem;
+  min-height: 100vh;
   z-index: 0;
   position: relative;
   top: 0;
-  transition: all 0.5s ease;
-  padding: 3rem;
-  background-color:#EFEFEF;
+  transition: margin-left var(--t-base) var(--ease), width var(--t-base) var(--ease);
+  padding: var(--page-pad);
+  background-color: var(--c-bg);
+  overflow-x: hidden;
 }
 
 .body-trimmed {
@@ -17,4 +19,13 @@
 .body-md-screen {
   width: calc(100% - 5rem);
   margin-left: 5rem;
+}
+
+@media (max-width: 575.98px) {
+  .body,
+  .body-md-screen {
+    width: calc(100% - 3.5rem);
+    margin-left: 3.5rem;
+    padding: var(--space-3);
+  }
 }

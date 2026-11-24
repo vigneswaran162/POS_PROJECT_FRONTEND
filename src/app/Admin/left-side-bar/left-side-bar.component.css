@@ -1,77 +1,97 @@
 .sidenav {
-  background: #FFFFFF ;
-  transition: all 0.5s ease;
+  background: var(--c-surface);
+  transition: width var(--t-base) var(--ease), transform var(--t-base) var(--ease);
   position: fixed;
-  z-index: 1;
+  z-index: 5;
   top: 0;
+  left: 0;
   width: 16.5625rem;
-  height: 100vh; 
-   border: 1px solid rgb(237, 237, 237) ;
+  height: 100vh;
+  height: 100dvh;
+  border-right: 1px solid var(--c-border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden auto;
 }
 .sidenav-collapsed {
   width: 5rem;
 }
+
 .sidenav .logo-container {
   display: flex;
   align-items: center;
-  padding: 0.938rem 0.938rem 0 0.938rem;
+  padding: var(--space-4) var(--space-4) 0;
   width: 100%;
 }
 .sidenav .logo-container .logo {
-  background:transparent;
+  background: transparent;
   text-align: center;
   width: 3rem;
   min-width: 3rem;
-  border-radius: 0.313rem;
-  padding: 0.313rem;
+  height: 3rem;
+  border-radius: var(--radius-sm);
   font-size: 24px;
-  font-weight: 900;
   cursor: pointer;
   border: none;
-    color: #666 ;
+  color: var(--c-text-muted);
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.sidenav .logo-container .logo:hover {
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
 }
 .sidenav .logo-container .logo-text {
   margin-left: 1.5rem;
   font-size: 24px;
   font-weight: 700;
-  color: #666 ;
+  color: var(--c-text-muted);
 }
 .sidenav .logo-container .btn-close-1 {
   margin-left: auto;
   cursor: pointer;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   background-color: transparent;
   border: none;
+  display: grid;
+  place-items: center;
+  transition: background-color var(--t-fast);
+}
+.sidenav .logo-container .btn-close-1:hover {
+  background: var(--c-bg);
 }
 .sidenav .logo-container .btn-close-1 .bi-x {
-  color: #666;
-  font-size: 30px;
+  color: var(--c-text-muted);
+  font-size: 28px;
+  line-height: 1;
 }
 
 .sidenav-nav {
   list-style: none;
-  padding: 0.938rem;
+  padding: var(--space-4);
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: calc(100% - 3.65rem);
   cursor: pointer;
 }
 .sidenav-nav .sidenav-nav-item {
   width: 100%;
-  margin-bottom: 0.625rem;
+  margin-bottom: var(--space-2);
+  list-style: none;
 }
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link {
   display: flex;
   align-items: center;
   height: 3rem;
-  color: #666;
+  color: var(--c-text-muted);
   text-decoration: none;
-  border-radius: 0.625rem;
-  transition: all 0.3s ease;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-md);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-icon {
   font-size: 22px;
@@ -79,20 +99,45 @@
   min-width: 2rem;
   text-align: center;
   padding: 12px;
+  box-sizing: content-box;
 }
 .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-text {
   margin-left: 1.5rem;
 }
 .sidenav-nav .sidenav-nav-item:hover .sidenav-nav-link {
-  background-color:#fae9ca;
-  color: #FFA62F;
+  background-color: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+.sidenav-nav .sidenav-nav-link:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: -2px;
 }
 
 .active {
-  background-color:#fae9ca;
+  background-color: var(--c-primary-soft);
 }
 .active .sidenav-link-icon,
 .active .sidenav-link-text {
-  color: #FFA62F;
+  color: var(--c-primary);
+  font-weight: 600;
+}
 
+/* compact collapsed rail on phones; expanded menu overlays the page */
+@media (max-width: 575.98px) {
+  .sidenav-collapsed {
+    width: 3.5rem;
+  }
+  .sidenav-collapsed .logo-container {
+    padding-inline: 0.25rem;
+  }
+  .sidenav-collapsed .sidenav-nav {
+    padding-inline: 0.25rem;
+  }
+  .sidenav-collapsed .sidenav-link-icon {
+    padding-inline: 0.5rem;
+  }
+  .sidenav:not(.sidenav-collapsed) {
+    width: min(16.5625rem, 85vw);
+    box-shadow: var(--shadow-lg);
+  }
 }

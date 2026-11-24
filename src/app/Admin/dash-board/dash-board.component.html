@@ -4,48 +4,73 @@
 
         </div>
         <div class="col-md-12 gird">
-            <div class="gird-box">
+            <div class="gird-box kpi k-rev">
                 <h2 class="mb-3">Revenue</h2>
                 <div  class="d-flex">
                  <div>
                 <i class="bi bi-graph-up-arrow"></i>
                  </div>
-                 <h3>{{totalrevenue}}</h3>
+                 <h3 class="count" [style.--n]="totalrevenue"><span class="sr-only">{{totalrevenue}}</span></h3>
                 </div>
             </div>
-            <div class="gird-box">
+            <div class="gird-box kpi k-del">
                 <h2 class="mb-3">Delivery</h2>
                 <div class="d-flex">
                <div >
                      <i class="bi bi-cart3"></i>
                </div>
-                    <h3>{{ orderCounts['Delivery'] }}</h3>
+                    <h3 class="count" [style.--n]="orderCounts['Delivery']"><span class="sr-only">{{ orderCounts['Delivery'] }}</span></h3>
                 </div>
             </div>
-            <div class="gird-box">
+            <div class="gird-box kpi k-dine">
                 <h2 class="mb-3">Dine In</h2>
                 <div class="d-flex">
                     <div>
                                       <i class="bi bi-shop-window"></i>
                     </div>
-                    <h3>{{ orderCounts['Dine In'] }}</h3>
+                    <h3 class="count" [style.--n]="orderCounts['Dine In']"><span class="sr-only">{{ orderCounts['Dine In'] }}</span></h3>
                 </div>
             </div>
-            <div class="gird-box">
+            <div class="gird-box kpi k-take">
                 <h2 class="mb-3">Take Away</h2>
                 <div class="d-flex">
                      <div>            <i class="bi bi-basket"></i></div>
-                     <h3>{{ orderCounts['Take Away'] }}</h3>
+                     <h3 class="count" [style.--n]="orderCounts['Take Away']"><span class="sr-only">{{ orderCounts['Take Away'] }}</span></h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 mx-2 p-2 pie-chart mt-4">
-                    <h2 class="my-2 text-center ">Last 7 Days Sales</h2>
-<div id="salesBarChart" style="width: 100%; height: 350px;"></div>
+        <div class="pie-chart chart-card">
+            <h2 class="chart-title">Last 7 Days Sales</h2>
+            <div class="bars" *ngIf="salesBarChart?.length; else noSales">
+                <div class="bar-col" *ngFor="let d of salesBarChart; let i = index">
+                    <span class="bar-value">{{ d.totalSales }}</span>
+                    <div class="bar-track">
+                        <div class="bar" [style.height.%]="barHeight(d.totalSales)"
+                             [style.--c]="palette[i % palette.length]" [style.animation-delay.ms]="i * 90"></div>
+                    </div>
+                    <span class="bar-label">{{ d.date }}</span>
+                </div>
+            </div>
+            <ng-template #noSales><p class="empty">No sales in the last 7 days</p></ng-template>
         </div>
-        <div class="col-md-5 p-2 pie-chart mt-4">
-        <h2 class="my-2 text-center ">Revenue by Order Type</h2>
-            <div id="orderTypeRevenueChart" style="height:350px;width:100%;"></div>
+        <div class="pie-chart chart-card">
+            <h2 class="chart-title">Revenue by Order Type</h2>
+            <div class="donut-wrap" *ngIf="revenueSlices.length; else noRev">
+                <div class="donut" [style.background]="donutGradient">
+                    <div class="donut-hole">
+                        <span class="donut-total">₹ {{ totalrevenue }}</span>
+                        <span class="donut-sub">Total</span>
+                    </div>
+                </div>
+                <ul class="legend">
+                    <li *ngFor="let s of revenueSlices; let i = index" [style.animation-delay.ms]="i * 120">
+                        <span class="dot" [style.background]="s.color"></span>
+                        <span class="lg-name">{{ s.name }}</span>
+                        <span class="lg-val">₹ {{ s.value }} <em>{{ s.percent }}%</em></span>
+                    </li>
+                </ul>
+            </div>
+            <ng-template #noRev><p class="empty">No revenue data yet</p></ng-template>
         </div>
         <div class="col-md-12 my-2">
             <h2 class="top-selling-food">Top Selling Dishes</h2>

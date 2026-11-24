@@ -86,8 +86,10 @@ export class ItemSaleRegisterComponent {
       category: this.category,
       item: this.itemCode
     }
-    let result: any = await this.ItemMasterService.getSalesReport(this.filter).toPromise();
-    this.allData = result;
+    let result: any = await this.ItemMasterService.getItemWiseSalesReport(this.filter).toPromise();
+    this.allData = Array.isArray(result) ? result : (result?.items ?? []);
+    this.searchText = '';
+    this.currentPage = 1;
     this.filteredData = [...this.allData];
     this.calculatePagination();
   }
@@ -97,12 +99,10 @@ export class ItemSaleRegisterComponent {
     const search = this.searchText.toLowerCase();
 
     this.filteredData = this.allData.filter(item =>
-      (item.OrderNo?.toString().toLowerCase().includes(search)) ||
-      (item.OrderDate ? new Date(item.OrderDate).toLocaleDateString().toLowerCase().includes(search) : false) ||
-      (item.OrderType?.toLowerCase().includes(search)) ||
-      (item.PaymentType?.toLowerCase().includes(search)) ||
-      (item.ItemCount?.toString().includes(search)) ||
-      (item.TotalAmount?.toString().includes(search))
+      (item.ItemCode?.toString().toLowerCase().includes(search)) ||
+      (item.ItemName?.toLowerCase().includes(search)) ||
+      (item.TotalQty?.toString().includes(search)) ||
+      (item.NetAmount?.toString().includes(search))
     );
 
     this.currentPage = 1;
@@ -126,11 +126,19 @@ export class ItemSaleRegisterComponent {
 
   exportToExcel() {
 
+    if (!this.filteredData.length) {
+      alert('No data to export');
+      return;
+    }
     const data = this.filteredData.map(item => ({
-      ItemName: item.ItemName,
-      TotalQty: item.TotalQty,
-      TotalAmount: item.TotalAmount
-
+      'Item Code': item.ItemCode,
+      'Item Name': item.ItemName,
+      'Order Count': item.OrderCount,
+      'Total Qty': item.TotalQty,
+      'Gross Amount': item.GrossAmount,
+      'Discount': item.DiscountAmount,
+      'Tax': item.TaxAmount,
+      'Net Amount': item.NetAmount
     }));
 
     // 👉 Date Range
@@ -138,7 +146,7 @@ export class ItemSaleRegisterComponent {
     const toDate = this.formatDate(this.toDate);
 
     // 👉 Grand Total
-    const grandTotal = data.reduce((sum, item) => sum + Number(item.TotalAmount || 0), 0);
+    const sum = (k: string) => (data as any[]).reduce((s, i) => s + Number(i[k] || 0), 0);
 
     // 👉 Create empty sheet
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet([]);
@@ -158,7 +166,8 @@ export class ItemSaleRegisterComponent {
     const totalRowIndex = data.length + 3;
 
     XLSX.utils.sheet_add_aoa(worksheet, [[
-      'Grand Total', '', '', '', '', grandTotal
+      'Grand Total', '', sum('Order Count'), sum('Total Qty'), sum('Gross Amount'),
+      sum('Discount'), sum('Tax'), sum('Net Amount')
     ]], { origin: `A${totalRowIndex}` });
 
     // 👉 Merge Heading & Subheading
